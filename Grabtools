@@ -1,0 +1,49 @@
+-- GrabTools Script
+
+-- Konfigurasi
+local grabRange = 999-- Jarak untuk mengambil objek
+local grabSpeed = 1 -- Kecepatan untuk mengambil objek
+
+-- Fungsi untuk mengambil objek
+local function grabObject(object)
+    if object then
+        local humanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local objectPosition = object.Position
+        local playerPosition = humanoidRootPart.Position
+        local distance = (objectPosition - playerPosition).Magnitude
+        
+        if distance <= grabRange then
+            local bodyPosition = Instance.new("BodyPosition")
+            bodyPosition.Parent = object
+            bodyPosition.Position = humanoidRootPart.Position + humanoidRootPart.CFrame.LookVector * 3
+            bodyPosition.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            
+            -- Mengatur kecepatan objek
+            local bodyVelocity = Instance.new("BodyVelocity")
+            bodyVelocity.Parent = object
+            bodyVelocity.Velocity = (humanoidRootPart.CFrame.LookVector * grabSpeed)
+            
+            -- Menghapus BodyPosition dan BodyVelocity setelah beberapa detik
+            wait(1)
+            bodyPosition:Destroy()
+            bodyVelocity:Destroy()
+        else
+            print("Objek terlalu jauh!")
+        end
+    else
+        print("Tidak ada objek yang dipilih!")
+    end
+end
+
+-- Fungsi untuk mendeteksi objek yang dipilih
+local function getSelectedObject()
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    local target = mouse.Target
+    return target
+end
+
+-- Fungsi utama
+local function main()
+    local userInputService = game:GetService("UserInputService")
+    userInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode
